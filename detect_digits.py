@@ -4,6 +4,7 @@ import keras.models
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+from sudoku import Sudoku
 from PIL import Image, ImageOps
 import cv2
 from imutils import contours
@@ -28,6 +29,7 @@ datagen = None
 def load_digits():
     global images
     global classes
+
     data = os.listdir("./digits")
     for folder_name in data:
         folder = os.listdir("./digits/" + folder_name)
@@ -366,6 +368,35 @@ def valid(table, num, pos):
                 return False
     return True
 
+
+def check_solution(matrix):
+    board = []
+
+    for array in matrix:
+        list = []
+        for num in array:
+            list.append(int(num))
+        board.append(list)
+
+    puzzle = Sudoku(3, 3, board)
+
+    solve(matrix)
+    puzzle = puzzle.solve()
+
+    equal = True
+
+    for i in range(9):
+        for j in range(9):
+            if int(puzzle.board[i][j]) != int(matrix[i][j]):
+                print(f'Difference {puzzle.board[i][j]} {int(matrix[i][j])}')
+                equal = False
+    if equal:
+        print("Solution same sa the one given with pysudoku")
+
+    else:
+        print("Solution not the same sa the one given with pysudoku")
+    print(matrix)
+
 if __name__ == '__main__':
     # load_digits()
     # split_data()
@@ -381,5 +412,8 @@ if __name__ == '__main__':
     # cv2.waitKey()
 
     matrix = create_board_matrix(image)
-    solve(matrix)
     print(matrix)
+    check_solution(matrix)
+
+    # solve(matrix)
+    # print(matrix)
