@@ -1,6 +1,4 @@
 import os
-import time
-from cv2 import sort
 import keras.models
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -68,8 +66,6 @@ def preprocess_data():
         temp_img.append(prep(img))
     test_img = np.array(temp_img)
 
-    print(train_img.shape)
-
     train_img = train_img.reshape(train_img.shape[0], train_img.shape[1], train_img.shape[2], 1)
     test_img = test_img.reshape(test_img.shape[0], test_img.shape[1], test_img.shape[2], 1)
     datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, zoom_range=0.2, shear_range=0.1,
@@ -81,7 +77,7 @@ def create_matrix_classes():
     global train_classes
     global test_classes
 
-    number_of_classes = 9  # 0,1,2,3,4,5,6,7,8,9
+    number_of_classes = 9  # 1,2,3,4,5,6,7,8,9
     train_classes = to_categorical(train_classes, number_of_classes)
     test_classes = to_categorical(test_classes, number_of_classes)
 
@@ -172,6 +168,7 @@ def crop_board(image, cnt1, cnt2):
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         imagewrap = cv2.warpPerspective(image, matrix, (450, 450))
         imagewrap = cv2.cvtColor(imagewrap, cv2.COLOR_BGR2GRAY)
+
         return imagewrap
     return None
 
@@ -235,7 +232,6 @@ def create_model():
     global train_img
     global train_classes
 
-
     history = model.fit(datagen.flow(train_img, train_classes, batch_size=32),
                         epochs=30, steps_per_epoch=200,
                         validation_data=(test_img, test_classes))
@@ -274,6 +270,7 @@ def create_board_matrix(image):
             matrix.append(predictions.index(prob) + 1)
         else:
             matrix.append(0)
+
     matrix = np.array(matrix)
     matrix = np.reshape(matrix, newshape=(9, 9))
     return matrix
