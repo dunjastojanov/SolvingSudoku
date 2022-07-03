@@ -28,6 +28,7 @@ To start up the project do the following steps:
 
     pip install -r requirements.txt
 
-3. Open project in PyCharm configure Pithon interpreter from your new virtual environment.
-4. To solve Sudoku puzzle run script detect_digits.py. To train model run script training.py.
+3. Unpack digits.rar
+4. Open project in PyCharm configure Pithon interpreter from your new virtual environment.
+5. To solve Sudoku puzzle run script detect_digits.py. To train model run script training.py.
 
